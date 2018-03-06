@@ -306,3 +306,44 @@ PARAM_DEFINE_INT32(RC_RSSI_PWM_MAX, 1000);
  *
  */
 PARAM_DEFINE_INT32(RC_RSSI_PWM_MIN, 2000);
+
+/**
+ * TRIM for heli_roll 
+ *
+ *
+ * @min -0.3
+ * @max  0.3
+ * @group Radio Calibration
+ *
+ */
+PARAM_DEFINE_FLOAT(HELI_TRIM_ROLL, 0.0f);
+
+/**
+ * TRIM for heli_pitch
+ *
+ *
+ * @min -0.3
+ * @max  0.3
+ *
+ */
+PARAM_DEFINE_FLOAT(HELI_TRIM_PITCH, 0.0f); 
+
+/**
+ * TRIM for heli_yaw 
+ *
+ *
+ * @min -0.3
+ * @max  0.3
+ *
+ */
+PARAM_DEFINE_FLOAT(HELI_TRIM_YAW, 0.0f);
+
+/**
+ * TRIM for heli_thrust 
+ *
+ *
+ * @min -0.3
+ * @max  0.3
+ *
+ */
+PARAM_DEFINE_FLOAT(HELI_TRIM_THRUST, 0.0f);

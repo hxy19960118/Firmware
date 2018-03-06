@@ -289,6 +289,8 @@ private:
 
 	bool			_test_fmu_fail; ///< To test what happens if IO looses FMU
 
+    float _heli_trim[4]; // param for heli_trim roll pitch yaw thrust
+
 	/**
 	 * Trampoline to the worker task
 	 */
@@ -511,6 +513,7 @@ PX4IO::PX4IO(device::Device *interface) :
 
 	_debug_enabled = false;
 	_servorail_status.rssi_v = 0;
+	memset(&_heli_trim, 0.0f, sizeof(_heli_trim));
 }
 
 PX4IO::~PX4IO()
@@ -1221,6 +1224,35 @@ PX4IO::task_main()
 					param_get(parm_handle, &param_val);
 					(void)io_reg_set(PX4IO_PAGE_SETUP, PX4IO_P_SETUP_MOTOR_SLEW_MAX, FLOAT_TO_REG(param_val));
 				}
+                
+                /* heli_trim for roll */
+               	parm_handle = param_find("HELI_TRIM_ROLL");
+
+				if (parm_handle != PARAM_INVALID) {
+					param_get(parm_handle, &_heli_trim[0]);
+				}
+                
+                /* heli_trim for pitch */
+               	parm_handle = param_find("HELI_TRIM_PITCH");
+
+				if (parm_handle != PARAM_INVALID) {
+					param_get(parm_handle, &_heli_trim[1]);
+				}
+                
+                /* heli_trim for yaw */
+               	parm_handle = param_find("HELI_TRIM_YAW");
+
+				if (parm_handle != PARAM_INVALID) {
+					param_get(parm_handle, &_heli_trim[2]);
+				}
+
+                /* heli_trim for thrust */
+               	parm_handle = param_find("HELI_TRIM_THRUST");
+
+				if (parm_handle != PARAM_INVALID) {
+					param_get(parm_handle, &_heli_trim[3]);
+				}
+
 			}
 
 		}
@@ -1319,6 +1351,10 @@ PX4IO::io_set_control_state(unsigned group)
 
 		/* ensure FLOAT_TO_REG does not produce an integer overflow */
 		float ctrl = controls.control[i];
+
+        if ( group == 0) {
+            ctrl += _heli_trim[i];
+        }
 
 		if (ctrl < -1.0f) {
 			ctrl = -1.0f;
